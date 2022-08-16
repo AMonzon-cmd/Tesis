@@ -17,7 +17,6 @@ use App\Http\Controllers\UsuarioController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::group(['prefix' => 'v1'], function () {
     Route::get('/1', function(){
         echo "OK";

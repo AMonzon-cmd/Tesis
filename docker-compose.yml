@@ -31,12 +31,7 @@ services:
       - 'proxy'
 
   backoffice:
-    build:
-      context: ./pbackoffice/
-      dockerfile: Dockerfile
-      args:
-        user: sammy
-        uid: 1000
+    build: pbackoffice
     restart: unless-stopped
     ports:
       - 5050:5050
