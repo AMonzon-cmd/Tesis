@@ -34,8 +34,7 @@ RUN chown -R www-data:www-data \
     /var/www/html/bootstrap/cache
 
 
-RUN php artisan key:generate
-RUN php artisan config:cache
+
 
 # Comando para ejecutar migraciones. Lo dejo comentado porque yo no tengo la DB.
 # RUN php artisan migrate
