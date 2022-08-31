@@ -7,7 +7,7 @@ import VueAxios from 'vue-axios'
 import router from './router'
 import store from './store'
 import App from './App.vue'
-// import './Interceptors/axios'
+import './Interceptors/axios'
 // Global Components
 import './global-components'
 
