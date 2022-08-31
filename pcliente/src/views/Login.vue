@@ -86,7 +86,7 @@
                 <small class="text-danger">{{ errors[0] }}</small>
               </validation-provider>
             </b-form-group>
-            <br/>
+            <br>
             <!-- submit button -->
             <b-button
               variant="primary"
@@ -105,7 +105,7 @@
             <span>Crea una cuenta</span>
           </b-link>
         </b-card-text>
-      <br/>
+      <br>
       </b-card>
       <!-- /Login v1 -->
     </div>
