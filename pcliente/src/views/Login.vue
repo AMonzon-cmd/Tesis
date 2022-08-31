@@ -118,7 +118,6 @@ import {
   BButton, BForm, BFormInput, BFormGroup, BCard, BLink, BCardTitle, BCardText, BInputGroup, BInputGroupAppend,
 } from 'bootstrap-vue'
 import { required, email } from '@validations'
-import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 
 export default {
   components: {

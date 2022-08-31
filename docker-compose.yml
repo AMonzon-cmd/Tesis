@@ -5,7 +5,7 @@ services:
     build: proxy
     restart: always
     ports:
-      - 80:80
+      - 8000:8000
     networks:
       - client-server_network
 
