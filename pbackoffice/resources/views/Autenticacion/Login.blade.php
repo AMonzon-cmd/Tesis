@@ -10,8 +10,8 @@
 		<!-- ================== CSS BASE ================== -->
 	
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-		<link href="http://192.168.152.128/backoffice/assets/TemaAdminPanel/css/default/app.min.css" rel="stylesheet" />
-		<link href="http://192.168.152.128/backoffice/assets/TemaAdminPanel/css/default/theme/green.min.css" rel="stylesheet" />
+		<link href="{{ asset("assets/$AdminPanel/css/default/app.min.css")}}" rel="stylesheet" />
+		<link href="{{ asset("assets/$AdminPanel/css/default/theme/green.min.css")}}" rel="stylesheet" />
 	
 		<!-- ================== FIN BASE CSS ================== -->
 	</head>
