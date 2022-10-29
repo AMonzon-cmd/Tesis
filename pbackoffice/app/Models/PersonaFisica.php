@@ -8,10 +8,10 @@ class PersonaFisica extends Model
 {
 
     protected $table = 'PersonasFisicas';
-    protected $primaryKey = 'IdPersonaFisica';
+    protected $primaryKey = 'idUSuario';
 
     protected $fillable = [
-        'IdUsuario', 'Nombre', 'Apellido', 'Documento', 'Sexo', 'FechaNacimiento'
+        'idUsuario', 'nombre', 'apellido', 'documento', 'sexo', 'fechaNacimiento'
     ];
 
 }

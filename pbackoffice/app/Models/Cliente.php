@@ -29,5 +29,8 @@ class Cliente extends Model
     public function servicios(){
         return $this->belongsToMany(Servicio::class, 'ServiciosAgendados', 'idUsuario', 'idServicio');
     }
-
+    
+    public function estaDeBaja(){
+        return $this->deleted_at != null;
+    }
 }

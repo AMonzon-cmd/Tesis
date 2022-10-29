@@ -21,8 +21,11 @@
         <validation-observer ref="registerForm">
           <b-form
             class="auth-register-form mt-2"
-            @submit.prevent="validationForm"
+            @submit.prevent="registro"
           >
+          <b-alert v-if="error !== ''" class="alert alert-danger col-12 text-center">
+           {{error}}
+          </b-alert>
             <!-- username -->
             <b-form-group
               label="Nombre y Apelllido"
@@ -76,13 +79,25 @@
               >
                 <b-form-input
                   id="email"
-                  v-model="regEmail"
+                  v-model="email"
                   :state="errors.length > 0 ? false:null"
                   name="register-email"
                   placeholder="john@example.com"
                 />
                 <small class="text-danger">{{ errors[0] }}</small>
               </validation-provider>
+            </b-form-group>
+
+            <b-form-group
+              label="Fecha de Nacimiento"
+              label-for="password"
+            >
+              <b-form-input
+              id="input-last_login"
+              type="date"
+              v-model="fechaNacimiento"
+              class="mb-2"
+            />
             </b-form-group>
 
             <!-- password -->
@@ -133,7 +148,18 @@
             </b-form-group>
 
             <!-- submit button -->
+            <b-button v-if="registrando"
+              variant="primary"
+              type="submit"
+              block
+              :disabled="invalid"
+            >
+              <div class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </b-button>
             <b-button
+              v-else
               variant="primary"
               block
               type="submit"
@@ -166,8 +192,8 @@ import {
 } from 'bootstrap-vue'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { useRouter } from 'vue-router';
+import { isUserLoggedIn } from '@/auth/utils';
 
 export default {
   setup() {
@@ -180,6 +206,7 @@ export default {
     }
     return { submit }
   },
+
   components: {
     // BSV
     BCard,
@@ -200,14 +227,17 @@ export default {
   mixins: [togglePasswordVisibility],
   data() {
     return {
-      regEmail: '',
       username: '',
       password: '',
+      nombre: '',
+      documento: '',
       status: '',
-
       // validation rules
       required,
       email,
+      registrando: false,
+      error: '',
+      fechaNacimiento: '',
     }
   },
   computed: {
@@ -216,22 +246,96 @@ export default {
     },
   },
   methods: {
-    validationForm() {
-      const router = useRouter();
-      router.push('/login');
-      this.$refs.registerForm.validate().then(success => {
-        if (success) {
-          this.$toast({
-            component: ToastificationContent,
-            props: {
-              title: 'Form Submitted',
-              icon: 'EditIcon',
-              variant: 'success',
-            },
-          })
-        }
-      })
+    registro() {
+      console.log(this.nombre.split(' '));
+      this.registrando = true;
+      if (!this.status) {
+        this.registrando = false;
+        this.error = 'Debes aceptar los terminos y condiciones';
+        return;
+      }
+
+      if (this.nombre.trim().length === 0) {
+        this.registrando = false;
+        this.error = 'Debe ingresar nombre y apellido';
+        return;
+      }
+
+      if (this.documento.trim().length === 0) {
+        this.registrando = false;
+        this.error = 'El documento no puede estar vacio';
+        return;
+      }
+
+      if (this.email.trim().length === 0) {
+        this.registrando = false;
+        this.error = 'El email no puede estar vacio';
+        return;
+      }
+
+      if (this.password.trim().length < 6) {
+        this.registrando = false;
+        this.error = 'La contraseña debe tener minimo 6 caracteres';
+        return;
+      }
+
+      if (this.edad(this.fechaNacimiento) < 18) {
+        this.registrando = false;
+        this.error = 'Debe ser mayor para registrarte en payday';
+        return;
+      }
+      const nombres = this.nombre.split(' ');
+      const nombre1 = nombres[0];
+      const apellido1 = (nombres.length === 1) ? '' : nombres[1];
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: this.email,
+          contrasena: this.password,
+          nombre: nombre1,
+          apellido: apellido1,
+          documento: this.documento,
+          fechaNacimiento: this.fechaNacimiento,
+        }),
+      };
+      fetch(`${this.$baseUrlApi}/user`, requestOptions)
+        .then(async response => {
+          const data = await response.json();
+          // check for error response
+          if (!response.ok) {
+            this.registrando = false;
+            // get error message from body or default to response status
+            const error = (data && data.message) || response.status;
+            return Promise.reject(error);
+          }
+          this.$router.push('/confirmacionRegistro');
+          this.registrando = false;
+          return true;
+        })
+        .catch(error => {
+          this.registrando = false;
+          this.errorMessage = error;
+          console.error('There was an error!', error);
+        });
     },
+    edad(fecha) {
+      const hoy = new Date();
+      const cumpleanos = new Date(fecha);
+      let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+      const m = hoy.getMonth() - cumpleanos.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+        edad -= 1;
+      }
+      return edad;
+    },
+  },
+  beforeCreate() {
+    // invocar los métodos
+    if (isUserLoggedIn()) {
+      this.$router.push('/');
+    }
+    console.log('HOLAAAAA');
   },
 }
 </script>

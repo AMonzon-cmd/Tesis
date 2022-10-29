@@ -1,14 +1,14 @@
 <div id="header" class="header navbar-default">
     <!-- begin navbar-header -->
     <div class="navbar-header">
-    <a href="index.html" class="navbar-brand"><img src="{{ asset('img/LogoFondoTransparente.png')}}" alt=""></a>
+    <a href="/backoffice" class="navbar-brand"><img src="{{ asset('img/LogoFondoTransparente.png')}}" alt=""></a>
         <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
     </div>
-    <form class="navbar-nav navbar-right" action="{{route('CerrarSesion')}}" method="POST">
+    <form class="navbar-nav navbar-right" action="{{ruta('cerrarSesion')}}" method="POST">
         @csrf
         <ul class="navbar-nav navbar-right">
             <li class="navbar-form">

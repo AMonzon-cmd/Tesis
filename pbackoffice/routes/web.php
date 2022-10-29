@@ -46,8 +46,6 @@ Route::get('/inicioSesion', [LoginController::class, 'IniciarSesionView'])->name
 //Accion de iniciar sesion
 Route::get('/iniciarSesion', [LoginController::class, 'IniciarSesion'])->name('IniciarSesionAccion');
 
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/', [ModulosController::class, 'Dashboard']);
     Route::post('/cerrarSesion', [LoginController::class, 'CerrarSesion'])->name('CerrarSesion');
@@ -61,6 +59,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ModulosController::class, 'ListadoClientes'])->name('ListadoClientes');
         Route::get('/{idUsuario}', [ModulosController::class, 'ModificarCliente'])->name('ModificarCliente');
         Route::get('/{idUsuario}/pagos', [ModulosController::class, 'ListarPagosCliente'])->name('ListadoPagosCliente');
+        Route::get('/{idUsuario}/canjes', [ModulosController::class, 'ListarCanjesCliente'])->name('ListadoCambioProductos');
     });
 
     Route::get('/listadoServicios', [ModulosController::class, 'ListadoServicios'])->name('ListadoServicios');
@@ -68,22 +67,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/listadoPagos', [ModulosController::class, 'ListadoPagos'])->name('ListadoPagos');
 
     Route::get('/producto', [ModulosController::class, 'AltaProductoCatalogo'])->name('vistaAltaProducto');
+    Route::get('/publicidades', [ModulosController::class, 'ListadoPublicidad'])->name('vistaListadoPublicidad');
     Route::get('/productos', [ProductoCatalogoController::class, 'vistaListadoProductos'])->name('vistaListadoProductos');
     Route::post('/producto', [ProductoCatalogoController::class, 'altaNuevoProducto'])->name('accionAltaProducto');
     Route::get('/producto/{id}', [ProductoCatalogoController::class, 'vistaEditarProducto'])->name('vistaEditarProducto');
     Route::put('/producto/{id}', [ProductoCatalogoController::class, 'editarProducto'])->name('accionEditarProducto');
-    Route::put('/producto/{id}', [ProductoCatalogoController::class, 'editarProducto'])->name('accionEditarProducto');
-
+    Route::get('/roles', [ModulosController::class, 'ListadoRoles'])->name('ListadoRoles');
+    Route::get('/listadoPermisos/{idRol}', [ModulosController::class, 'ListadoPermisosRoles'])->name('ListadoPermisos');
+    
+    // Route::put('/producto/{id}', [ProductoCatalogoController::class, 'editarProducto'])->name('accionEditarProducto');
 
 
     // PETICIONES POR AJAX //////////////////////
     Route::post('/AltaEmpleadoAjax', [UsuarioController::class, 'AltaEmpleado']);
     Route::post('/ModificarEmpleadoAjax', [UsuarioController::class, 'ModificarEmpleado'])->name('modificacionEmpleado');
+    Route::post('/cambiarEstadoEmpleado', [UsuarioController::class, 'cambiarEstadoEmpleado'])->name('cambiarEstadoEmpleado');
+    Route::post('/generarNuevaPassword', [UsuarioController::class, 'generarNuevaPassword'])->name('generarNuevaPassword');
+    Route::post('/actualizarPassword', [UsuarioController::class, 'actualizarPassword'])->name('actualizarPassword');
     Route::post('/modificarClienteAjax', [ClienteController::class, 'ModificarCliente'])->name('ModificacionCliente');
+    Route::post('/cambiarEstadoCliente', [ClienteController::class, 'CambiarEstado'])->name('CambiarEstadoCliente');
     Route::post('/anularPagoAjax', [PagoController::class, 'AnularPago'])->name('AnularPago');
     Route::post('/cambiarEstadoServicio', [ServicioController::class, 'alternarEstadoServicio'])->name('alternarEstadoServicio');
     Route::post('/cambiarEstadoProducto', [ProductoCatalogoController::class, 'alternarEstadoProducto'])->name('alternarEstadoProducto');
     Route::post('/modificarServicio', [ServicioController::class, 'modificarServicio'])->name('modificarServicio');
+    Route::post('/modificarPublicidad', [ServicioController::class, 'modificarPublicidad'])->name('cambiarEstadoPublicidad');
+    Route::post('/altaPublicidad', [ServicioController::class, 'altaPublicidad'])->name('altaPublicidad');
+    Route::post('/eliminarRol', [UsuarioController::class, 'EliminarRol'])->name('eliminaRol');
+    Route::post('/agregarRol', [UsuarioController::class, 'CrearRol'])->name('agregarRol');
+    Route::post('/actualizarPermisos', [UsuarioController::class, 'ActualizarPermisosRoles'])->name('acualizarRoles');
+
     ////////////////////////////////////////////
 });
 

@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AltaPago;
+use App\Mail\ComprobanteCanje;
+use App\Mail\ComprobantePago;
+use App\Models\ExceptionLog;
 use App\Models\Moneda;
 use App\Models\Pago;
+use App\Models\ReclamoProducto;
 use App\Models\ServicioAgendado;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PagosController extends Controller
 {
@@ -22,24 +27,37 @@ class PagosController extends Controller
             $pagos = Pago::where('usuario_id', $idUsuario)->get();
             return response()->json(['respuesta' => 'Pagos obtenidos correctamente', 'pagos' => $pagos], 200);
         } catch(Exception $e){
+            (new ExceptionLog())->cargarExcepcion('listarPagosUsuario', $e->getMessage());
             return response()->json(['respuesta' => 'No se pudieron obtener los pagos. Contacte a soporte'], 500);
         }
+    }
+
+    protected function mail(){
+        $pago = ReclamoProducto::find(1);
+        Mail::to('clferreri94@hotmail.com')->send(new ComprobanteCanje($pago));
     }
 
     protected function relizarPago(AltaPago $request){
         try {
             DB::beginTransaction();
             $datos = $request->all();
+            if(!is_numeric($datos['monto'])){
+                return response()->json(['respuesta' => 'El monto ingresado no es valido.'],400);
+            }
             $pago = $this->_realizarPago($datos);
             $this->_actualizarPuntaje($pago);
             $this->_agendarServicio($datos['idServicio']);
-            $pago->notificar();
+            try{
+                $pago->notificar();
+            }catch(Exception $e){
+                (new ExceptionLog())->cargarExcepcion('relizarPago', 'No se pudo enviar email de pago. Motivo: ' . $e->getMessage());
+            }
             DB::commit(); 
             return response()->json(['respuesta' => 'Pago realizado correctamente.'],200);
         } catch (\Throwable $th) {
             DB::rollback();
-
-            return response()->json(['respuesta' => $th->getMessage()], 500);
+            (new ExceptionLog())->cargarExcepcion('relizarPago', $th->getMessage());
+            return response()->json(['respuesta' => 'No se pudo realizar el pago.'], 500);
         }
     }
 

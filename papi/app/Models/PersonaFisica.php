@@ -13,5 +13,4 @@ class PersonaFisica extends Model
     protected $fillable = [
         'idUsuario', 'nombre', 'apellido', 'documento', 'sexo', 'fechaNacimiento'
     ];
-
 }

@@ -195,7 +195,7 @@
           }).then((result) => {
               if (result.isConfirmed) {
                 $.ajax({
-              url: '{!! route('AnularPago') !!}',
+              url: '{!! ruta('anularPagoAjax') !!}',
               type:'post',
               dataType: "json",
               data:{

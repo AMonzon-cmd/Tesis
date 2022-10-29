@@ -5,11 +5,10 @@ server {
         proxy_pass http://client:8080;
     }
     location /api/ {
-        proxy_pass http://api:5000;
-        proxy_set_header Host localhost;
+        proxy_pass http://api:5000/;
     }
     location /backoffice/ {
-        proxy_pass http://backoffice:5050;
-        proxy_set_header Host localhost;
+        proxy_pass http://backoffice:5050/;
     }
+
 }

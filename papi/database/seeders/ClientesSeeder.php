@@ -30,6 +30,21 @@ class ClientesSeeder extends Seeder
                 'tipo' => 'Persona Fisica',
                 'email'=> 'cliente3@hotmail.com',
                 'pass' => Hash::make('prueba123'),
+            ),
+            array(
+                'tipo' => 'Persona Fisica',
+                'email'=> 'hernan.aguirrezabala@payday.com.uy',
+                'pass' => Hash::make('hernan123'),
+            ),
+            array(
+                'tipo' => 'Persona Fisica',
+                'email'=> 'cliente4@hotmail.com',
+                'pass' => Hash::make('prueba123'),
+            ),
+            array(
+                'tipo' => 'Persona Fisica',
+                'email'=> 'cristian.ferreri@payday.com.uy',
+                'pass' => Hash::make('prueba123'),
             )
         );
 
@@ -38,7 +53,7 @@ class ClientesSeeder extends Seeder
             array(
                 'idUsuario' => 1,
                 'nombre'    => 'Jorge',
-                'apellido'  => 'Sistema',
+                'apellido'  => 'Perez',
                 'documento' => '111111111',
                 'sexo'      => 'masculino',
                 'fechaNacimiento' => '1990-10-01'
@@ -46,7 +61,7 @@ class ClientesSeeder extends Seeder
             array(
                 'idUsuario' => 2,
                 'nombre'    => 'Antonio',
-                'apellido'  => 'Sistema',
+                'apellido'  => 'Cesar',
                 'documento' => '222222222',
                 'sexo'      => 'masculino',
                 'fechaNacimiento' => '1990-10-01'
@@ -54,9 +69,33 @@ class ClientesSeeder extends Seeder
             array(
                 'idUsuario' => 3,
                 'nombre'    => 'Alicia',
-                'apellido'  => 'Sistema',
+                'apellido'  => 'Araujo',
                 'documento' => '333333333',
                 'sexo'      => 'femenino',
+                'fechaNacimiento' => '1990-10-01'
+            ),
+            array(
+                'idUsuario' => 4,
+                'nombre'    => 'Hernan',
+                'apellido'  => 'Aguirrezabala',
+                'documento' => '44444444',
+                'sexo'      => 'masculino',
+                'fechaNacimiento' => '1990-10-01'
+            ),
+            array(
+                'idUsuario' => 5,
+                'nombre'    => 'Tomas',
+                'apellido'  => 'Lopez',
+                'documento' => '55555555',
+                'sexo'      => 'masculino',
+                'fechaNacimiento' => '1990-10-01'
+            ),
+            array(
+                'idUsuario' => 6,
+                'nombre'    => 'Cristian',
+                'apellido'  => 'Ferreri',
+                'documento' => '66666666',
+                'sexo'      => 'masculino',
                 'fechaNacimiento' => '1990-10-01'
             )
         );

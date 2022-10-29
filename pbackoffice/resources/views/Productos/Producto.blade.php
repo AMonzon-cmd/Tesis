@@ -49,7 +49,7 @@
             <div class="alert alert-success col-12 mt-2"><h5>{{$mensaje}}<h5></div>
           </div>
           @endif
-        <form role="form" action="{{route('accionEditarProducto', ['id' => $producto->id])}}" onsubmit="return parametrosCorrectos()" method="POST">
+        <form role="form" action="{{ruta('producto', $producto->id)}}" onsubmit="return parametrosCorrectos()" method="POST">
           @csrf
           @method('PUT')
           <div class="card-body">
@@ -145,7 +145,7 @@
             <div class="alert alert-success col-12 mt-2"><h5>{{$mensaje}}<h5></div>
           </div>
           @endif
-        <form role="form" action="{{route('accionAltaProducto')}}" onsubmit="return parametrosCorrectos()" method="POST">
+        <form role="form" action="{{ruta('producto')}}" onsubmit="return parametrosCorrectos()" method="POST">
           @csrf
           <div class="card-body">
             <div class="row">

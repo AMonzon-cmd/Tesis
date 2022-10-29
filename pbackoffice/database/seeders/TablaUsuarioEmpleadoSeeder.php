@@ -25,6 +25,22 @@ class TablaUsuarioEmpleadoSeeder extends Seeder
                 'documento' => '000000000',
                 'rol'       => 1
             ),
+            "2" => array(
+                'email' => 'operario@netcodesolutions.com',
+                'password' => Hash::make('operario123'),
+                'nombre' => 'Operario',
+                'apellido' => 'Netcode',
+                'documento' => '000000001',
+                'rol'       => 2
+            ),
+            "3" => array(
+                'email' => 'mod@netcodesolutions.com',
+                'password' => Hash::make('moderador123'),
+                'nombre' => 'Operario',
+                'apellido' => 'Netcode',
+                'documento' => '000000002',
+                'rol'       => 3
+            ),
         );
 
 

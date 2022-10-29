@@ -49,69 +49,55 @@
   <div class="row">
     <div class="panel panel-primary w-100">
       <div class="panel-heading">
-        <h4 class="panel-title">Listado</h4>
+        <h4 class="panel-title">Listado de productos reclamados</h4>
         <div class="panel-heading-btn">
           <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-reload" onclick=""><i class="fa fa-redo"></i></a>
           <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
         </div>
       </div>
       <br>
-      <a class="ml-3 btn btn-success" href="{{route('vistaAltaProducto')}}">Nuevo Producto</a>
+      <a class="ml-3 btn btn-success" href="{{ruta('producto')}}">Nuevo Producto</a>
       <div class="panel-body table-responsive">
         <table id="productosTable" class="table table-bordered table-hover">
           <thead>
             <tr class="text-center">
-                <th>Nombre</th>
-                <th>Costo</th>
-                <th>Fecha realizado</th>
-                <th>Editar</th>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>Puntaje cobrado</th>
+                <th>Estado</th>
+                {{-- <th>Acciones</th> --}}
             </tr>
           </thead>
           <tbody>
-            @foreach ($productos as $producto)
-              @if($producto->deleted_at != null)
-                <tr class="table-danger" id="tr{{$producto->id}}">
+            @foreach ($reclamos as $reclamo)
+              @if($reclamo->deleted_at != null)
+                <tr class="table-danger" id="tr{{$reclamo->id}}">
               @else
-                <tr id="tr{{$producto->id}}">
+                <tr id="tr{{$reclamo->id}}">
               @endif
                 <td>
-                  <img src="{{$producto->img}}" alt="" style="max-width: 40px">
+                  <img src="{{$reclamo->producto->img}}" alt="" style="max-width: 40px">
                 </td>
                 <td>
-                  {{$producto->nombre}}
-                </td>
-                <td>
-                    {{$producto->descripcion}}
+                  {{$reclamo->producto->nombre}}
                 </td>
 
                 <td>
-                    {{$producto->costo}}
+                    {{$reclamo->puntos_producto}}
                 </td>
 
                 <td>
-                    {{$producto->stock}}
+                  {!! $reclamo->getEstado() !!}
                 </td>
 
-                <td>
-                    @if ($producto->deleted_at == null)
-                        <span class="text-green">Activo</span>
-                    @else
-                        <span class="text-red">Inactivo</span>
+                {{-- <td>
+                    @if ($reclamo->deleted_at == null && $reclamo->fecha_retiro == null)
+                        <a data-toggle="tooltip" data-placement="top" title="Dar de baja" class="text-secondary ml-2"><i class="fas fa-ban fa-lg"></i></a> 
+                        <a data-toggle="tooltip" data-placement="top" title="Dar de baja" class="text-secondary ml-2"><i class="fas fa-ban fa-lg"></i></a> 
                     @endif
-                </td>
-        
-            <td class="text-center pt-3">
-              <a href="{{route('vistaEditarProducto', ['id' => $producto->id])}}"><i class="fas fa-user-edit fa-lg"></i></a>
-              @if ($producto->deleted_at == null)
-                <a href="javascript:;" onclick="cambiarEstado({{$producto->id}}, 'alta')" class="text-danger ml-2 mt-1"><i class="fas fa-ban fa-lg"></i></a>
-              @else
-                <a href="javascript:;" onclick="cambiarEstado({{$producto->id}}, 'baja')" class="text-success ml-2 mt-1"><i class="fas fa-check-circle fa-lg"></i></a>
-              @endif
-            </td>
+                </td> --}}
               </tr>
-
             @endforeach
-
           </tbody>
         </table>
       </div>
@@ -167,7 +153,7 @@
                 "sProcessing":"Procesando...",
               },
               "columnDefs": [
-                { className: "text-center align-middle", "targets": [0,1,2,3,4,5,6] },
+                { className: "text-center align-middle", "targets": [0,1,2,3] },
               ]
   
       });   
@@ -190,7 +176,7 @@
           }).then((result) => {
               if (result.isConfirmed) {
                 $.ajax({
-              url: '{!! route('alternarEstadoProducto') !!}',
+              url: '{!! ruta('cambiarEstadoProducto') !!}',
               type:'post',
               dataType: "json",
               data:{

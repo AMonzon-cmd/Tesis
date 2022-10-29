@@ -33,7 +33,14 @@ RUN chown -R www-data:www-data \
     /var/www/html/storage \
     /var/www/html/bootstrap/cache
 
-# Comando para ejecutar migraciones. Lo dejo comentado porque yo no tengo la DB.
-# RUN php artisan migrate
+RUN php artisan cache:clear
+RUN php artisan key:generate
+RUN php artisan config:cache
 
+# Comando para ejecutar migraciones. Lo dejo comentado porque yo no tengo la DB.
+RUN php artisan migrate
+RUN php artisan passport:install
+RUN php artisan token:update
+
+EXPOSE 5000
 CMD php artisan serve --host=0.0.0.0 --port=5000

@@ -26,13 +26,10 @@ class AltaClienteFisicoRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => 'email:rfc,dns|required|unique:usuarios,email',
+            'email'     => 'email|required|unique:Usuarios,email',
             'contrasena'=> 'required',
             'nombre'    => 'required',
-            'apellido'  => 'required',
             'documento' => 'required|unique:PersonasFisicas,documento',
-            'sexo'      => 'required',
-            'fechaNacimiento' => 'required'
         ];
     }
 

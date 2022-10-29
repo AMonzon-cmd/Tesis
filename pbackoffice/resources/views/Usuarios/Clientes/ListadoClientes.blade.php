@@ -34,7 +34,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
         <div class="col-sm-6">
-            <h1>Listado de Empleados</h1>
+            <h1>Listado de Clientes</h1>
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -94,9 +94,10 @@
 
             </td>
             <td class="text-center">
-            <a data-toggle="tooltip" data-placement="top" title="Editar cliente" href="{{route('ModificarCliente', ['idUsuario' => $cliente->id])}}" class="text-secondary"><i class="fas fa-user-edit fa-lg"></i></a>  
-            <a data-toggle="tooltip" data-placement="top" title="Listar pagos" href="{{route('ListadoPagosCliente', ['idUsuario' => $cliente->id])}}" class="text-secondary ml-2"><i class="fas fa-receipt fa-lg"></i></a>  
-            {{-- <a data-toggle="tooltip" data-placement="top" title="Productos reclamados" href="{{route('ListadoPagosCliente', ['idUsuario' => $cliente->id])}}" class="text-secondary ml-2"><i class="fas fa-gift fa-lg"></i></a>  --}}
+            <a data-toggle="tooltip" data-placement="top" title="Editar cliente" href="{{ruta('clientes', $cliente->id)}}" class="text-secondary"><i class="fas fa-user-edit fa-lg"></i></a>  
+            <a data-toggle="tooltip" data-placement="top" title="Listar pagos" href="{{ruta('clientes', $cliente->id, 'pagos')}}" class="text-secondary ml-2"><i class="fas fa-receipt fa-lg"></i></a>  
+            <a data-toggle="tooltip" data-placement="top" title="Productos reclamados" href="{{ruta('clientes', $cliente->id, 'canjes')}}" class="text-secondary ml-2"><i class="fas fa-gift fa-lg"></i></a> 
+            <a data-toggle="tooltip" data-placement="top" title="Dar de baja" onclick="cambiarEstado({{$cliente->id}}, {{$cliente->estaDeBaja()}})" class="text-secondary ml-2"><i class="fas fa-ban fa-lg"></i></a> 
             </td>
               </tr>
 
@@ -128,7 +129,11 @@
   
 
     $(document).ready(function() {    
-  
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
       $('#equipoTable').DataTable({
         pageLength: 25,
         lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'Todos']],
@@ -171,6 +176,59 @@
       });     
   
   });
+
+  function cambiarEstado(idCliente, estadoActual){
+        if(idCliente != 0){
+          var estaDandoBaja = !estadoActual;
+          Swal.fire({
+            title: (estaDandoBaja) ? 'Desea dar de baja el cliente' : '¿Desea dar de alta el cliente?',
+            text: (estaDandoBaja) ? 'El cliente no podra utilizar los servicios' : 'El cliente podra volver a utilizar payday',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: (estaDandoBaja) ? 'Deshabilitar cliente' : 'Habilitar cliente',
+            cancelButtonText: 'Cancelar',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+              url: '{!! ruta("cambiarEstadoCliente") !!}',
+              type:'post',
+              dataType: "json",
+              data:{
+                'id': idCliente
+              },
+              success: function (response) {
+                Swal.fire(
+                  estaDandoBaja ? 'Deshabilitar cliente' : 'Habilitar cliente',
+                  'Operacion realizada correctamente.',
+                  'success'
+                )
+                location.reload();
+              },
+              statusCode: {
+                  400: function(response) {
+                    Swal.fire(
+                      estaDandoBaja ? 'Deshabilitar cliente' : 'Habilitar cliente',
+                      response.responseJSON.respuesta,
+                      'error'
+                    )
+                    //console.log(response);
+                  },
+                  500: function(response){
+                    Swal.fire(
+                      estaDandoBaja ? 'Deshabilitar cliente' : 'Habilitar cliente',
+                      'Error al realizar la operacion.',
+                      'error'
+                    )
+                    //console.log(response);
+                  }
+              }
+            });
+            }
+          })
+        }
+      }
   
  
   

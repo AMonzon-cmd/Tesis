@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 	<head>
 		<meta charset="utf-8" />
 		<title>Payday Admin | Login</title>
@@ -8,14 +7,11 @@
 		<meta content="" name="description" />
 		<meta content="" name="author" />
 		<!-- ================== CSS BASE ================== -->
-	
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 		<link href="{{ asset("assets/$AdminPanel/css/default/app.min.css")}}" rel="stylesheet" />
 		<link href="{{ asset("assets/$AdminPanel/css/default/theme/green.min.css")}}" rel="stylesheet" />
-	
 		<!-- ================== FIN BASE CSS ================== -->
 	</head>
-	
 	<body class="pace-top">	
 		<div id="page-container" class="fade">
 			<div class="login login-with-news-feed">
@@ -37,7 +33,7 @@
 					</div>			
 				</div>
 				<div class="login-content">
-					<form action="{{route('IniciarSesionAccion')}}" onsubmit="" method="GET" class="margin-bottom-0">
+					<form action="{{ruta('iniciarSesion')}}" onsubmit="return IniciarSesion()" method="GET" class="margin-bottom-0">
 						<div class="form-group m-b-15">
 							<input type="text" name="email" class="form-control form-control-lg" placeholder="Email" required />
 						</div>
@@ -66,7 +62,7 @@
 						<div class="login-buttons text-center">
                             <button type="submit" class="btn btn-success btn-block btn-lg mb-2"><span id="iconoIniciar">Iniciar <i class="fa fa-sign-in-alt ml-2 fa-lg"></i></span> 
 							</button>
-                            <a href="#">Olvidé mi contraseña</a>
+                            {{-- <a href="#">Olvidé mi contraseña</a> --}}
 						</div>
                         <div class=" text-inverse">						
 						</div>
@@ -106,7 +102,7 @@
 		function IniciarSesion(){
 
 			$("#iconoIniciar").html('<i class="fas fa-circle-notch fa-spin fa-lg"></i>');
-
+			return true;
 		}
 
 	</script>

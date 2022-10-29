@@ -20,9 +20,13 @@
                 </a>
             </li>
             <li>
-                <form action="{{route('CerrarSesion')}}" method="POST">
+                <form action="{{ruta('cerrarSesion')}}" method="POST">
                     @csrf
                     <ul class="nav nav-profile"> 
+                        
+                        <li>
+                            <a href="javascript:;" onclick="cambiarPassModal()"><i class="fas fa-key"></i> Cambiar Contraseña</a>
+                        </li>
                         <li>
                             <a href="javascript:;"><i class="fa fa-question-circle"></i> Ayuda</a>
                         </li>
@@ -35,15 +39,15 @@
         </ul>
         <!-- Fin Barra usuario -->
 
-        <ul class="nav"><li class="nav-header">Panel de Administración {{Auth::user()->listarPermisos()}}</li>
+        <ul class="nav"><li class="nav-header">Panel de Administración</li>
             <li class="@yield('menu-dashboard')">
-                <a href="{{route('Dashboard')}}">
+                <a href="{{ruta('dashboard')}}">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
 
-            @if (in_array('alta_empleado', $permisosUsuario) || in_array('listado_empleado', $permisosUsuario) || in_array('listado_clientes', $permisosUsuario))
+            @if (poseePermiso(['abm_empleados', 'alta_empleado', 'listado_clientes'], $permisosUsuario))
                 <li class="has-sub @yield('menu-usuarios')">
                     <a href="javascript:;">
                         <b class="caret"></b>
@@ -51,25 +55,29 @@
                         <span>Usuarios</span>
                     </a>
                     <ul class="sub-menu">
-                            @if(in_array('alta_empleado', $permisosUsuario))
-                                <li class="@yield('link-usuarios-generar')"><a href="{{route('AltaEmpleado')}}">Alta Empleado</a></li>  
+                            @if(in_array('abm_empleados', $permisosUsuario))
+                                <li class="@yield('link-usuarios-generar')"><a href="{{ruta('agregarEmpleado')}}">Alta Empleado</a></li>  
                             @endif
-                                <li class="@yield('link-usuarios-equipo')"><a href="{{route('ListadoEmpleados')}}">Listado Equipo</a></li>  
-
-                                <li class="@yield('link-usuarios-clientes')"><a href="{{route('ListadoClientes')}}">Listado Clientes</a></li>  
+                            @if(in_array('abm_empleados', $permisosUsuario))
+                                <li class="@yield('link-usuarios-equipo')"><a href="{{ruta('listadoEmpleados')}}">Listado Equipo</a></li>  
+                            @endif
+                            @if(in_array('listado_clientes', $permisosUsuario))
+                                <li class="@yield('link-usuarios-clientes')"><a href="{{ruta('clientes')}}">Listado Clientes</a></li> 
+                            @endif
                     </ul>
                 </li>
             @endif
-                
 
-                
+            @if (poseePermiso(['abm_servicios', 'listado_servicios'], $permisosUsuario))
                 <li class="has-sub @yield('menu-servicios')">
-                    <a href="{{route('ListadoServicios')}}">
+                    <a href="{{ruta('listadoServicios')}}">
                         <i class="fas fa-hand-holding-usd"></i>
                         <span>Servicios</span>
                     </a>
                 </li>
+            @endif
 
+            @if (poseePermiso(['abm_productos', 'listado_productos'], $permisosUsuario))
                 <li class="has-sub @yield('menu-catalogo')">
                     <a href="javascript:;">
                         <b class="caret"></b>
@@ -77,10 +85,16 @@
                         <span>Productos Catalogo</span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="@yield('link-catalogo-generar')"><a href="{{route('vistaAltaProducto')}}">Nuevo Producto Catalogo</a></li>              
-                        <li class="@yield('link-catalogo-listado')"><a href="{{route('vistaListadoProductos')}}">Listado Catalogo</a></li>     
+                        @if(in_array('abm_productos', $permisosUsuario))
+                            <li class="@yield('link-catalogo-generar')"><a href="{{ruta('producto')}}">Nuevo Producto Catalogo</a></li>    
+                        @endif
+                        
+                        @if(in_array('listado_productos', $permisosUsuario))
+                            <li class="@yield('link-catalogo-listado')"><a href="{{ruta('productos')}}">Listado Catalogo</a></li>     
+                        @endif
                     </ul>
                 </li>
+            @endif
                 {{-- 
                 <li class="@yield('menu-mediosDePago')">
                     <a href="">
@@ -96,20 +110,32 @@
                     </a>
                 </li> --}}
 
-
+                @if (poseePermiso(['listado_pagos', 'abm_pagos'], $permisosUsuario))
                 <li class="@yield('menu-pagos')">
-                    <a href="{{route('ListadoPagos')}}">
+                    <a href="{{ruta('listadoPagos')}}">
                         <i class="fas fa-handshake"></i>
                         <span>Pagos realizados</span>
                     </a>
                 </li>
+                @endif
 
+                @if (poseePermiso(['abm_publicidades', 'listado_publicidades'], $permisosUsuario))
+                <li class="@yield('menu-publicidad')">
+                    <a href="{{ruta('publicidades')}}">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Publicidad </span>
+                    </a>
+                </li>
+                @endif
+
+                @if (poseePermiso(['configuracion', 'listado_roles', 'abm_roles'], $permisosUsuario))
                 <li class="@yield('menu-configuracion')">
-                    <a href="">
+                    <a href="{{ruta('roles')}}">
                         <i class="fas fa-cogs"></i>
                         <span>Configuracion</span>
                     </a>
                 </li>
+                @endif
             <!-- begin sidebar minify button -->
             <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
             <!-- end sidebar minify button -->

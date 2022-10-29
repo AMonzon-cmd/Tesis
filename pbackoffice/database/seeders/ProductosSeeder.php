@@ -41,9 +41,45 @@ class ProductosSeeder extends Seeder
                 'descripcion' => 'Teclado y mouse inalambricos marca HP',
                 'costo'  => 95,
                 'stock'  => 25,
-                'img'    => 'https://www.nnet.com.uy/productos/imgs/combo-teclado---mouse-cliptec-rzk339s-inalambrico-negro-nnet-66651-35.jpg'
+                'img'    => 'https://www.impacto.com.pe/storage/products/16155685082.jpg'
+            ),
+            array(
+                'nombre' => 'Audifonos RGB',
+                'descripcion' => 'Audifonos USB con microfono y RGB',
+                'costo'  => 50,
+                'stock'  => 3,
+                'img'    => 'https://m.media-amazon.com/images/I/71A-tk9Bh-L._AC_SS450_.jpg'
+            ),
+            array(
+                'nombre' => 'Cuadro',
+                'descripcion' => 'Cuadro de bosque y montañas',
+                'costo'  => 15,
+                'stock'  => 2,
+                'img'    => 'https://http2.mlstatic.com/D_NQ_NP_729952-MLU50418111956_062022-O.webp'
+            ),
+            array(
+                'nombre' => 'Monitor Dell',
+                'descripcion' => 'Monitor 32 pulgadas Dell',
+                'costo'  => 135,
+                'stock'  => 1,
+                'img'    => 'https://m.media-amazon.com/images/I/81UXLSVxOSL._AC_SL1500_.jpg'
+            ),
+            // array(
+            //     'nombre' => 'Skateboard',
+            //     'descripcion' => 'Skateboard electrico con control remoto',
+            //     'costo'  => 65,
+            //     'stock'  => 1,
+            //     'img'    => 'https://m.media-amazon.com/images/I/61oqnLTXIwL._AC_SL1500_.jpg'
+            // ),
+            array(
+                'nombre' => 'Championes Adidas',
+                'descripcion' => 'Adidas Mens X9000l3 Running',
+                'costo'  => 95,
+                'stock'  => 25,
+                'img'    => 'https://m.media-amazon.com/images/I/71ieUTYz2QS._AC_UL1500_.jpg'
             )
         );
+
 
         foreach ($productos as $key => $producto) {
             DB::table('ProductosCatalogo')->insert([

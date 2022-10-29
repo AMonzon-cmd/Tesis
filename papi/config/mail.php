@@ -12,9 +12,7 @@ return [
     | and used as needed; however, this mailer will be used by default.
     |
     */
-
     'default' => env('MAIL_MAILER', 'smtp'),
-
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
@@ -32,7 +30,6 @@ return [
     |            "postmark", "log", "array", "failover"
     |
     */
-
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
@@ -42,12 +39,19 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
+            'auth_mode' => null,
+            'verify_peer' => false,
+            'stream' => [
+                'ssl' => [
+                    'allow_self_signed' => true,
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ],
         ],
-
         'ses' => [
             'transport' => 'ses',
         ],
-
         'mailgun' => [
             'transport' => 'mailgun',
         ],

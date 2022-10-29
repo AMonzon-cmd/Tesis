@@ -20,26 +20,21 @@ services:
       - 'proxy'
       - 'api'
 
-  api:
-    build: papi
+  backoffice:
+    build: pbackoffice
     restart: unless-stopped
     ports:
-      - 5000:5000
+      - 5050:5050
     networks:
       - client-server_network
     depends_on:
       - 'proxy'
 
-  backoffice:
-    build:
-      context: ./pbackoffice/
-      dockerfile: Dockerfile
-      args:
-        user: sammy
-        uid: 1000
+  api:
+    build: papi
     restart: unless-stopped
     ports:
-      - 5050:5050
+      - 5000:5000
     networks:
       - client-server_network
     depends_on:

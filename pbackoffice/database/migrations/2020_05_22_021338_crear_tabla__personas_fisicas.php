@@ -19,10 +19,10 @@ class CrearTablaPersonasFisicas extends Migration
         Schema::create('PersonasFisicas', function (Blueprint $table) {
             $table->unsignedInteger("idUsuario")->unique();
             $table->string("nombre", 50);
-            $table->string("apellido", 50);
+            $table->string("apellido", 50)->nullable();
             $table->string("documento", 15)->unique();
             $table->enum("sexo", ["masculino", "femenino", "otro"]);
-            $table->date("fechaNacimiento");
+            $table->date("fechaNacimiento")->nullable();
             $table->timestamps();
             
             ///////////////////

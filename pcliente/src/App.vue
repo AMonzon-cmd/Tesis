@@ -66,6 +66,18 @@ export default {
     // Set RTL
     const { isRTL } = $themeConfig.layout
     document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr')
+
+    // papi demo
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', '/api/api/v1/1', false);// false for synchronous request
+    xmlHttp.send(null);
+    console.log(xmlHttp.responseText);
+
+    // pbackoffice demo
+    const xmlHttp2 = new XMLHttpRequest();
+    xmlHttp.open('GET', '/backoffice/test', false);// false for synchronous request
+    xmlHttp.send(null);
+    console.log(xmlHttp2.responseText);
   },
   setup() {
     const { skinClasses } = useAppConfig()

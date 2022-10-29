@@ -45,8 +45,8 @@ class Usuario extends Authenticatable
     {
         return DB::table('Permisos')
         ->join('PermisosDeRoles', 'PermisosDeRoles.permiso_id', '=', 'Permisos.id')
-        ->join('Role', 'Role.id', '=', 'PermisosDeRoles.rol_id')
-        ->where('Role.id', $this->rol_id)
+        ->join('Roles', 'Roles.id', '=', 'PermisosDeRoles.rol_id')
+        ->where('Roles.id', $this->rol_id)
         ->pluck('Permisos.slug');
     }
 
@@ -57,6 +57,14 @@ class Usuario extends Authenticatable
         // ->join('Role', 'Role.id', '=', 'PermisosDeRoles.rol_id')
         // ->where('Role.id', $this->rol_id)->where('Permiso')
         // ->pluck('Permisos.slug');
+    }
+
+    public function getNombre(){
+        return $this->nombre . " " . $this->apellido;
+    }
+
+    public function estaDeBaja(){
+        return $this->deleted_at != null;
     }
 
 

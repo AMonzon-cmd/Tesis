@@ -40,6 +40,28 @@
           <!--fin de aside-->
 
 		<div id="content" class="content">
+      <div class="modal fade" id="mdlPass" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Actualizacion de contraseña</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <label for="txtNuevaPass">Nueva contraseña:</label>
+              <div class="form-group m-b-15">
+                <input data-toggle="password" name="password" data-placement="after" class="form-control form-control-lg" type="password" value="" placeholder="Contraseña" id="txtNuevaPass" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" onclick="actualizarPass()">Actualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 			@yield('contenido')
 		</div>
       
@@ -56,6 +78,77 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
   <script type="text/javascript" src="{{asset("js/UtilScripts/alertas.js")}}"></script>
   <script type="text/javascript" src="{{asset("js/UtilScripts/formatos.js")}}"></script>
+  <script src="{{ asset("assets/$AdminPanel/plugins/bootstrap-show-password/dist/bootstrap-show-password.js") }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+
+    $(document).ready(function() {    
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+    });
+    function cambiarPassModal(){
+      $("#txtNuevaPass").val('');
+      $("#mdlPass").modal('show');
+    }
+
+    function actualizarPass(){
+      let nuevaPass = $("#txtNuevaPass").val();
+      if(nuevaPass.trim().length < 8){
+        // la pass debe tener minimo 8 digitos
+      }
+
+      Swal.fire({
+            title: 'Actualizar contraseña',
+            text: '¿Esta seguro de actualizar la contraseña actual?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Actualizar',
+            cancelButtonText: 'Cancelar',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+              url: '{!! ruta("actualizarPassword") !!}',
+              type:'post',
+              dataType: "json",
+              data:{
+                'pass': nuevaPass
+              },
+              success: function (response) {
+                Swal.fire(
+                  'Actualizar contraseña',
+                  'Operacion realizada correctamente.',
+                  'success'
+                )
+                location.reload();
+              },
+              statusCode: {
+                  400: function(response) {
+                    Swal.fire(
+                      'Actualizar contraseña',
+                      response.responseJSON.respuesta,
+                      'error'
+                    )
+                    //console.log(response);
+                  },
+                  500: function(response){
+                    Swal.fire(
+                      'Actualizar contraseña',
+                      'Error al realizar la operacion.',
+                      'error'
+                    )
+                    //console.log(response);
+                  }
+              }
+            });
+            }
+          })
+    }
+  </script>
   <!-- ================== END BASE JS ================== -->
   
   @yield('scripts')

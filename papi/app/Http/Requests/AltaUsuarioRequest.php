@@ -15,7 +15,6 @@ class AltaUsuarioRequest extends FormRequest
     {
         return false;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,13 +23,11 @@ class AltaUsuarioRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => 'email:rfc,dns|required',
+            'email'     => 'email|required',
             'contrasena'=> 'required',
             'nombre'    => 'required',
             'apellido'  => 'required',
             'documento' => 'required|unique:PersonasFisicas,documento',
-            'sexo'      => 'required',
-            'fechaNacimiento' => 'required'
         ];
     }
 }

@@ -13,14 +13,14 @@ class CrearTablaPermisosDeRoles extends Migration
      */
     public function up()
     {
-        Schema::create('permisosDeRoles', function (Blueprint $table) {
+        Schema::create('PermisosDeRoles', function (Blueprint $table) {
             $table->unsignedTinyInteger('rol_id');
-            $table->unsignedInteger('premiso_id');
+            $table->unsignedInteger('permiso_id');
             $table->timestamps();
 
-            $table->primary(['rol_id', 'premiso_id']);
+            $table->primary(['rol_id', 'permiso_id']);
             $table->foreign('rol_id', 'FK_PermisoDeRol_Rol')->references('id')->on('Roles')->onDelete('restrict');
-            $table->foreign('premiso_id', 'FK_PermisoDeRol_Permiso')->references('id')->on('Permisos')->onDelete('restrict');
+            $table->foreign('permiso_id', 'FK_PermisoDeRol_Permiso')->references('id')->on('Permisos')->onDelete('restrict');
         });
     }
 
@@ -31,6 +31,6 @@ class CrearTablaPermisosDeRoles extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permisosDeRoles');
+        Schema::dropIfExists('PermisosDeRoles');
     }
 }

@@ -2,7 +2,7 @@
   <div class="auth-wrapper auth-v1 px-2">
     <div class="auth-inner py-2">
       <!-- Reset Password v1 -->
-      <b-card class="mb-0">
+      <b-card v-if="this.valido" class="mb-0">
 
         <!-- logo -->
         <b-link class="brand-logo">
@@ -23,7 +23,7 @@
           <b-form
             method="POST"
             class="auth-reset-password-form mt-2"
-            @submit.prevent="validationForm"
+            @submit.prevent="recuperar"
           >
 
             <!-- password -->
@@ -128,6 +128,7 @@ import {
 } from 'bootstrap-vue'
 import { required } from '@validations'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { isUserLoggedIn } from '@/auth/utils';
 
 export default {
   components: {
@@ -151,11 +152,41 @@ export default {
       password: '',
       // validation
       required,
-
+      valido: false,
+      token: '',
       // Toggle Password
       password1FieldType: 'password',
       password2FieldType: 'password',
     }
+  },
+  beforeCreate() {
+    if (isUserLoggedIn()) {
+      this.$router.push('/');
+    }
+
+    const token = window.location.search.split('=')[1];
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    fetch(`${this.$baseUrlApi}/recovery/token?tk=${token}`, requestOptions)
+      .then(async response => {
+        const data = await response.json();
+        // check for error response
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          this.$router.push('/');
+          return Promise.reject(error);
+        }
+        this.valido = true;
+        this.token = token;
+        return true;
+      })
+      .catch(error => {
+        this.errorMessage = error;
+        console.error('There was an error!', error);
+        this.$router.push('/');
+      });
   },
   computed: {
     password1ToggleIcon() {
@@ -186,7 +217,45 @@ export default {
         }
       })
     },
+    recuperar() {
+      if (this.cPassword !== this.password) {
+        this.$swal({
+          icon: 'warning',
+          title: 'Monto no valido',
+          text: 'Prueba ingresar un número mayor a 0.',
+          customClass: {
+            confirmButton: 'btn btn-success',
+          },
+        });
+      }
+      const requestOptions2 = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: this.token,
+          pass1: this.password,
+          pass2: this.cPassword,
+        }),
+      };
+      fetch(`${this.$baseUrlApi}/recovery`, requestOptions2)
+        .then(async response => {
+          const data = await response.json();
+          // check for error response
+          if (!response.ok) {
+            const error = (data && data.message) || response.status;
+            return Promise.reject(error);
+          }
+          this.valido = true;
+          this.$router.push('/confirmacionCambioPass');
+          return true;
+        })
+        .catch(error => {
+          this.errorMessage = error;
+          console.error('There was an error!', error);
+        });
+    },
   },
+
 }
 </script>
 

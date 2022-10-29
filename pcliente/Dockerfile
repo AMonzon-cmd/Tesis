@@ -1,4 +1,3 @@
-# Choose the Image which has Node installed already
 FROM node:lts-alpine
 
 # install simple http server for serving static content
@@ -19,5 +18,5 @@ COPY . .
 # build app for production with minification
 RUN npm run build
 
-EXPOSE 8000
-CMD [ "http-server", "dist" ]
+EXPOSE 8080
+CMD [ "http-server", "--proxy", "http://localhost:8080?",  "dist" ]

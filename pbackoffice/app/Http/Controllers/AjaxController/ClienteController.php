@@ -4,6 +4,8 @@ namespace App\Http\Controllers\AjaxController;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
+use App\Models\PersonaFisica;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -14,19 +16,36 @@ class ClienteController extends Controller
             $datos = $request->all();
             $cliente = Cliente::findOrFail($datos['id']);
             $datosCliente = $cliente->datos;
-            $this->modificarDatosCliente($datosCliente, $datos);
+            // dd($datosCliente);die;
+            $this->modificarDatosCliente($datos['id'], $datos);
             $this->modificarUsuario($cliente, $datos);
             return response()->json(['respuesta' => 'Modificacion de cliente exitosa.'], 200);
         }catch(Exception $e){
             return response()->json(['respuesta' => $e->getMessage()], 500);
         }
+    }
 
+    protected function CambiarEstado(Request $request){
+        try{
+            $datos = $request->all();
+            $cliente = Cliente::findOrFail($datos['id']);
+
+            $cliente->deleted_at = ($cliente->deleted_at == null) ? Carbon::now() : null;
+            $cliente->save();
+
+            return response()->json(['respuesta' => '.', 'cliente' => $cliente], 200);
+        }catch(Exception $e){
+            return response()->json(['respuesta' => $e->getMessage()], 500);
+        }
     }
 
     private function modificarDatosCliente($datosCliente, $datos){
-        if($datosCliente->documento != $datos['documento']){
-            $datosCliente->documento = $datos['documento'];
-            $datosCliente->save();
+        $persona = PersonaFisica::find($datosCliente);
+        if($persona->documento != $datos['documento']){
+            $persona->documento = '534534';
+            $persona->documento;
+            $persona->save();
+            dd($persona);
         }
     }
 

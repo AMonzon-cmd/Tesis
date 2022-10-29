@@ -95,7 +95,9 @@
 
             </td>
             <td class="text-center">
-            <a href="{{route('ModificarEmpleado', ['idUsuario' => $empleado->id])}}" class="text-secondary"><i class="fas fa-user-edit fa-lg"></i></a>  
+            <a href="{{ruta('modificarEmpleado', $empleado->id)}}" class="text-secondary"><i class="fas fa-user-edit fa-lg"></i></a>  
+            <a data-toggle="tooltip" data-placement="top" href="javascript:;" title="Generar nueva Password" onclick="regenerarContraeña({{$empleado->id}})" class="text-secondary ml-2"><i class="fas fa-unlock-alt fa-lg"></i></a> 
+            <a data-toggle="tooltip" data-placement="top" title="Dar de baja" onclick="cambiarEstado({{$empleado->id}}, {{$empleado->estaDeBaja()}})" class="text-secondary ml-2"><i class="fas fa-ban fa-lg"></i></a>  
             </td>
               </tr>
 
@@ -127,7 +129,11 @@
   
 
     $(document).ready(function() {    
-  
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
       $('#equipoTable').DataTable({
         pageLength: 25,
         lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'Todos']],
@@ -170,6 +176,113 @@
       });     
   
   });
+
+  
+
+  function cambiarEstado(idCliente, estadoActual){
+        if(idCliente != 0){
+          var estaDandoBaja = !estadoActual;
+          Swal.fire({
+            title: (estaDandoBaja) ? 'Desea dar de baja el empleado' : '¿Desea habilitar el empleado?',
+            text: (estaDandoBaja) ? 'El empleado no podra utilizar el backoffice' : 'El empleado podra volver a utilizar el backoffice',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: (estaDandoBaja) ? 'Deshabilitar empleado' : 'Habilitar empleado',
+            cancelButtonText: 'Cancelar',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+              url: '{!! ruta("cambiarEstadoEmpleado") !!}',
+              type:'post',
+              dataType: "json",
+              data:{
+                'id': idCliente
+              },
+              success: function (response) {
+                Swal.fire(
+                  estaDandoBaja ? 'Deshabilitar empleado' : 'Habilitar empleado',
+                  'Operacion realizada correctamente.',
+                  'success'
+                )
+                location.reload();
+              },
+              statusCode: {
+                  400: function(response) {
+                    Swal.fire(
+                      estaDandoBaja ? 'Deshabilitar empleado' : 'Habilitar empleado',
+                      response.responseJSON.respuesta,
+                      'error'
+                    )
+                    //console.log(response);
+                  },
+                  500: function(response){
+                    Swal.fire(
+                      estaDandoBaja ? 'Deshabilitar empleado' : 'Habilitar empleado',
+                      'Error al realizar la operacion.',
+                      'error'
+                    )
+                    //console.log(response);
+                  }
+              }
+            });
+            }
+          })
+        }
+      }
+
+      function regenerarContraeña(idCliente){
+        if(idCliente != 0){
+          Swal.fire({
+            title: 'Regenerar contraseña',
+            text: '¿Esta seguro de regenerar la contraseña al usuario?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Regenerar',
+            cancelButtonText: 'Cancelar',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+              url: '{!! ruta("generarNuevaPassword") !!}',
+              type:'post',
+              dataType: "json",
+              data:{
+                'id': idCliente
+              },
+              success: function (response) {
+                Swal.fire(
+                  'Regenerar contraseña',
+                  'Operacion realizada correctamente.',
+                  'success'
+                )
+                location.reload();
+              },
+              statusCode: {
+                  400: function(response) {
+                    Swal.fire(
+                      'Regenerar contraseña',
+                      response.responseJSON.respuesta,
+                      'error'
+                    )
+                    //console.log(response);
+                  },
+                  500: function(response){
+                    Swal.fire(
+                      'Regenerar contraseña',
+                      'Error al realizar la operacion.',
+                      'error'
+                    )
+                    //console.log(response);
+                  }
+              }
+            });
+            }
+          })
+        }
+      }
   
  
   

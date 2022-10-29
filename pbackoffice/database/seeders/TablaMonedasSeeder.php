@@ -28,6 +28,7 @@ class TablaMonedasSeeder extends Seeder
             ),
         );
 
+
         foreach ($monedas as $key => $moneda) {
             DB::table('Monedas')->insert([
              'nombre' => $moneda['nombre'],
@@ -38,5 +39,11 @@ class TablaMonedasSeeder extends Seeder
              'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ]);
         } 
+
+        DB::table('CotizacionMonedas')->insert([
+            'moneda_id' => 2,
+            'compra' => 41,
+            'venta' => 41,
+           ]);
     }
 }

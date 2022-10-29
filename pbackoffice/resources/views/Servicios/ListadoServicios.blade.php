@@ -234,7 +234,7 @@
         $("#btnGuardar").html('Guardando...');
         if($("#txtIdServicio").val() == ""){
           $.ajax({
-            url: '{!! route('AltaServicio') !!}',
+            url: '{!! ruta('servicio') !!}',
             type:'post',
             dataType: "json",
             data:{
@@ -268,7 +268,7 @@
         }
         else{
           $.ajax({
-            url: '{!! route('modificarServicio') !!}',
+            url: '{!! ruta('modificarServicio') !!}',
             type:'post',
             dataType: "json",
             data:{
@@ -332,7 +332,7 @@
           }).then((result) => {
               if (result.isConfirmed) {
                 $.ajax({
-              url: '{!! route('alternarEstadoServicio') !!}',
+              url: '{!! ruta('cambiarEstadoServicio') !!}',
               type:'post',
               dataType: "json",
               data:{

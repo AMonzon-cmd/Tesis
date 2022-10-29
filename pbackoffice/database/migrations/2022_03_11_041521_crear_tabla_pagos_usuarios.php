@@ -21,8 +21,9 @@ return new class extends Migration
             $table->decimal('monto', 8, 2);
             $table->enum('estado', ['Confirmado', 'Anulado', 'Pendiente']);
             $table->unsignedInteger('medio_de_pago_id')->nullable();
-            $table->unsignedSmallInteger('puntaje_generado');
+            $table->unsignedSmallInteger('puntaje_generado')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

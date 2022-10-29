@@ -34,7 +34,28 @@ class ServiciosSeeder extends Seeder
             array(
                 'nombre' => 'Impuestos',
                 'descripcion' => 'Servicio para pagar impuestos'
+            ),
+            array(
+                'nombre' => 'DGI',
+                'descripcion' => 'Servicio para pagar DGI'
+            ),
+            array(
+                'nombre' => 'Sucive',
+                'descripcion' => 'Servicio para pagar patente'
+            ),
+            array(
+                'nombre' => 'Direct TV',
+                'descripcion' => 'Servicio para pagar cable'
+            ),
+            array(
+                'nombre' => 'CASMU',
+                'descripcion' => 'Servicio para pagar mutualista'
+            ),
+            array(
+                'nombre' => 'Club atletico Peñarol',
+                'descripcion' => 'Servicio para pagar afiliacion a cuadro peñarol'
             )
+
         );
 
         foreach ($servicios as $key => $servicio) {

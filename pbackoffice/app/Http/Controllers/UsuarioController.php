@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Modelos\PersonaEmpleado;
+use App\Models\PermisosDeRoles;
+use App\Models\Rol;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -39,6 +42,14 @@ class UsuarioController extends Controller
             $this->CrearPersonaEmpleado($datos, $usuario);
 
         return $usuario;
+    }
+
+    
+
+    protected function PermisosRol(Request $request){
+        $datos = $request->all();
+        $permisos = PermisosDeRoles::where('rol_id', $datos['id'])->get();
+        return response()->json(['respuesta' => 'Listado de Roles.', 'permisos' => $permisos], 200);
     }
 
     protected function CrearPersonaEmpleado(array $datos, User $usuario){

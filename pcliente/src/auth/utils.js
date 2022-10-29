@@ -7,10 +7,21 @@ import useJwt from '@/auth/jwt/useJwt'
  */
 // eslint-disable-next-line arrow-body-style
 export const isUserLoggedIn = () => {
-  return localStorage.getItem('userData') && localStorage.getItem(useJwt.jwtConfig.storageTokenKeyName)
+  return localStorage.getItem('token') || localStorage.getItem(useJwt.jwtConfig.storageTokenKeyName)
 }
 
-export const getUserData = () => JSON.parse(localStorage.getItem('userData'))
+export const getToken = () => localStorage.getItem('token');
+
+export const getRequestOptionGet = () => {
+  const req = { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` } }
+  return req;
+}
+
+export const getRequestOptionPost = () => {
+  const req2 = { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` } }
+  return req2;
+}
+export const getUserData = () => localStorage.getItem('nombre');
 
 /**
  * This function is used for demo purpose route navigation

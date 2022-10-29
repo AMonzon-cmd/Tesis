@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\AjaxController;
 
 use App\Http\Controllers\Controller;
+use App\Mail\nuevaPassBackoffice;
 use App\Modelos\PersonaEmpleado;
+use App\Models\PermisosDeRoles;
+use App\Models\Rol;
 use App\Models\Usuario;
 use App\User;
 use App\Utilidades\Constantes;
@@ -11,7 +14,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -62,6 +67,16 @@ class UsuarioController extends Controller
         }
     }
 
+    protected function ActualizarPermisosRoles(Request $request)
+    {
+        $datos = $request->all();
+        PermisosDeRoles::where('rol_id', $datos['id'])->delete();
+        foreach ($datos['permisos'] as $key => $permiso) {
+            DB::insert("INSERT INTO PermisosDeRoles (rol_id, permiso_id) values ({$datos['id']}, {$permiso})");
+        }
+        return response()->json(['respuesta' => 'Permisos actualizados.'], 200);
+    }
+
     private function modificarDatos($empleadoModificar, $datos){
         $empleadoModificar->email = $datos['email'];
         $empleadoModificar->nombre = $datos['nombre'];
@@ -73,7 +88,7 @@ class UsuarioController extends Controller
 
     protected function ValidarDatosEmpleado($datos){
         return Validator::make($datos, [
-            'email' => ['required', 'unique:UsuariosBackoffice,email','email:rfc,dns'],
+            'email' => ['required', 'unique:UsuariosBackoffice,email','email'],
             'nombre' => ['required'],
             'documento' => ['required', 'numeric', 'unique:UsuariosBackoffice,documento'],
             'fechaNacimiento' => ['required'],
@@ -93,6 +108,81 @@ class UsuarioController extends Controller
         ]);
 
         return $usuario;
+    }
+
+    protected function cambiarEstadoEmpleado(Request $request){
+        try{
+            $datos = $request->all();
+            if(Auth::user()->id == $datos['id']){
+                return response()->json(['respuesta' => 'No puedes darte de baja a ti mismo...'], 400);
+            }
+            $empleado = Usuario::findOrFail($datos['id']);
+
+            $empleado->deleted_at = ($empleado->deleted_at == null) ? Carbon::now() : null;
+            $empleado->save();
+
+            return response()->json(['respuesta' => '.', 'empleado' => $empleado], 200);
+        }catch(Exception $e){
+            return response()->json(['respuesta' => $e->getMessage()], 500);
+        }
+    }
+
+    protected function generarNuevaPassword(Request $request){
+        try{
+            $datos = $request->all();
+            $empleado = Usuario::findOrFail($datos['id']);
+            $nuevaPass = Str::random(3) . rand(0,19) . Str::random(3) . '#' . rand(0,19);
+            $empleado->pass = Hash::make($nuevaPass);
+            $empleado->save();
+
+            //enviar mail al empleado
+            try{
+                Mail::to($empleado->email)->send(new nuevaPassBackoffice($nuevaPass));
+            }catch(Exception $e){
+                return response()->json(['respuesta' => $e->getMessage()], 400);
+            }
+            return response()->json(['respuesta' => '.', 'empleado' => $empleado], 200);
+        }catch(Exception $e){
+            return response()->json(['respuesta' => $e->getMessage()], 500);
+        }
+    }
+
+    protected function actualizarPassword(Request $request){
+        try{
+            $datos = $request->all();
+            $empleado = Usuario::findOrFail(Auth::user()->id);
+            $empleado->pass = Hash::make($datos['pass']);
+            $empleado->save();
+
+            return response()->json(['respuesta' => '.', 'empleado' => $empleado], 200);
+        }catch(Exception $e){
+            return response()->json(['respuesta' => $e->getMessage()], 500);
+        }
+    }
+
+    protected function CrearRol(Request $request){
+        $datos = $request->all();
+        $rol = Rol::where('nombre', $datos['nombre'])->first();
+        if($rol){
+            return response()->json(['respuesta' => 'Ya existe un rol con ese nombre.'], 400);
+        }
+        Rol::create(['nombre' => $datos['nombre']]);
+        return response()->json(['respuesta' => 'Usuario generado.'], 200);
+    }
+
+    protected function EliminarRol(Request $request){
+        $datos = $request->all();
+        $rol = Rol::find($datos['id']);
+
+        if(!$rol){
+            return response()->json(['respuesta' => 'No existe el rol.'], 400);
+        }
+
+        if ($rol->seEstaUsando()){
+            return response()->json(['respuesta' => 'El rol esta siendo utilizado por usuarios del sistema.'], 400);
+        }
+        $rol->delete();
+        return response()->json(['respuesta' => 'Rol dado de baja.'], 200);
     }
 
     // public function GenerarPersonaEmpleado(int $idUsuario,array $datos){

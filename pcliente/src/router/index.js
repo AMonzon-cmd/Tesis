@@ -90,6 +90,46 @@ const router = new VueRouter({
         layout: 'full',
       },
     },
+    {
+      path: '/perfil',
+      name: 'perfil',
+      component: () => import('@/views/Perfil.vue'),
+      meta: {
+        layout: 'full',
+      },
+    },
+    {
+      path: '/pagar',
+      name: 'pagar',
+      component: () => import('@/views/RealizarPago.vue'),
+      meta: {
+        layout: 'full',
+      },
+    },
+    {
+      path: '/confirmacionPago',
+      name: 'confirmacionPago',
+      component: () => import('@/views/ConfirmacionPago.vue'),
+      meta: {
+        layout: 'full',
+      },
+    },
+    {
+      path: '/confirmacionCambioPass',
+      name: 'confirmacionCambioPass',
+      component: () => import('@/views/ConfirmacionCambioPass.vue'),
+      meta: {
+        layout: 'full',
+      },
+    },
+    {
+      path: '/confirmacionRegistro',
+      name: 'confirmacionRegistro',
+      component: () => import('@/views/ConfirmacionRegistro.vue'),
+      meta: {
+        layout: 'full',
+      },
+    },
   ],
 })
 

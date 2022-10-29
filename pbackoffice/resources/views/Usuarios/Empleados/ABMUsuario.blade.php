@@ -24,7 +24,7 @@
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Cliente</a></li>
-            <li class="breadcrumb-item"><a href="{{route('ListadoEmpleados')}}">Listado Equipo</a></li>
+            <li class="breadcrumb-item"><a href="{{ruta('listadoEmpleados')}}">Listado Equipo</a></li>
             <li class="breadcrumb-item active">Editar Empleado</li>
           </ol>
         </div>
@@ -53,19 +53,19 @@
 @endisset
     
 @isset($usuario)
-        
+
   <!-- Main content -->
   <div class="row">
     <div class="col-12 p-0">
       <div class="card card-primary">
         <div class="card-header pb-0">
-          <a class="float-right align-middle mt-1" href="{{route('ListadoEmpleados')}}"><i class="fas fa-arrow-alt-circle-left fa-lg"></i> Ir al listado</a>
+          <a class="float-right align-middle mt-1" href="{{ruta('listadoEmpleados')}}"><i class="fas fa-arrow-alt-circle-left fa-lg"></i> Ir al listado</a>
           <input type="text" value="{{$usuario->IdUsuario}}"  id="idUsuario" hidden>   
         </div>
         <!-- /.card-header -->
         <div class="card-body">
           <input type="text" id="txtId" value="{{$usuario->id}}" hidden>
-          <input type="text" id="urii" value="{{route('modificacionEmpleado')}}">
+          <input type="text" id="urii" value="{{ruta('ModificarEmpleadoAjax')}}" hidden>
           <div class="row">
             <div class="form-group col-12 col-md-6">
               <label for="exampleInputEmail1">Email</label>
@@ -141,7 +141,7 @@
           <div class="card-body">                  
           </div><!-- /.card-body -->
           <div id="pnlPieBotones" class="card-footer text-right">
-            <a href="{{route('ListadoEmpleados')}}" class="btn btn-success m-auto col-12 col-md-6 col-xl-3">Volver</a>
+            <a href="{{ruta('listadoEmpleados')}}" class="btn btn-success m-auto col-12 col-md-6 col-xl-3">Volver</a>
             <button type="button" id="btnActualizarEmpleado" class="btn btn-green m-auto col-12 col-md-6 col-xl-3">Actualizar</button>
           </div>
         </form>
@@ -165,6 +165,7 @@
                 <label for="exampleInputEmail1">Email</label>
                 <div class="input-group">
                   <div class="input-group-prepend">
+                    <input type="text" id="uriiAlta" value="{{ruta('AltaEmpleadoAjax')}}" hidden>
                     <span class="input-group-text d-none d-sm-block"><i class="fas fa-envelope"></i></span>
                   </div>
                   <input required type="email" class="form-control" id="txtEmail" placeholder="Ingresa un correo" name="email">

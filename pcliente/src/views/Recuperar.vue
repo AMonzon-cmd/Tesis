@@ -21,7 +21,7 @@
         <validation-observer ref="simpleRules">
           <b-form
             class="auth-forgot-password-form mt-2"
-            @submit.prevent="validationForm"
+            @submit.prevent="recuperar"
           >
             <!-- email -->
             <b-form-group
@@ -35,7 +35,7 @@
               >
                 <b-form-input
                   id="forgot-password-email"
-                  v-model="userEmail"
+                  v-model="email"
                   :state="errors.length > 0 ? false:null"
                   name="forgot-password-email"
                   placeholder="john@example.com"
@@ -43,18 +43,20 @@
                 <small class="text-danger">{{ errors[0] }}</small>
               </validation-provider>
             </b-form-group>
-
+          <b-alert v-if="respuesta != ''" class="alert alert-danger col-12 text-center justify-content-center mb-2">
+            {{respuesta}}
+          </b-alert>
+          <br/>
             <!-- submit button -->
             <b-button
               variant="primary"
               block
               type="submit"
             >
-              Send reset link
+              Enviar link
             </b-button>
           </b-form>
         </validation-observer>
-
         <b-card-text class="text-center mt-2">
             ¿Ya la recuerdas?
           <b-link :to="{name:'login'}">
@@ -94,6 +96,7 @@ export default {
       // validation
       required,
       email,
+      respuesta: '',
     }
   },
   methods: {
@@ -103,6 +106,29 @@ export default {
           this.$router.push({ name: 'auth-reset-password-v1' })
         }
       })
+    },
+
+    recuperar() {
+      console.log('entro');
+      const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      };
+      fetch(`${this.$baseUrlApi}/recovery?email=${this.email}`, requestOptions)
+        .then(async response => {
+          const data = await response.json();
+          // check for error response
+          if (!response.ok) {
+            const error = (data && data.message) || response.status;
+            return Promise.reject(error);
+          }
+          this.respuesta = data.respuesta;
+          return true;
+        })
+        .catch(error => {
+          this.errorMessage = error;
+          console.error('There was an error!', error);
+        });
     },
   },
 }

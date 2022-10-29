@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TablaRolesSeeder::class);//----------------------> Roles del Sistema
         $this->call(ClientesSeeder::class);
         $this->call(TablaUsuarioEmpleadoSeeder::class);//----------------------> Monedas del Sistema
+        $this->call(PermisosSeeder::class);
+        $this->call(PagosSeeder::class);
+        $this->call(Reclamos::class);
     }
 }

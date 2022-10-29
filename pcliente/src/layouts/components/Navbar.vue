@@ -17,10 +17,15 @@
     </ul>
 
     <!-- Left Col -->
-
     <div v-if="!logeado" class="col-12 text-right">
-      <button @click="$router.push('login')" class="btn btn-success text-right mr-2">Iniciar sesion</button>
-      <button @click="$router.push('registro')" class="btn btn-success">Registrate</button>
+      <button
+      v-for="language in languages"
+      :key="language.locale"
+      @click="changeLanguage(language.locale)">
+        {{ language.title }}
+    </button>
+      <button @click="$router.push('login')" class="btn btn-success text-right mr-2">{{ $t('login')}}</button>
+      <button @click="$router.push('registro')" class="btn btn-success">{{ $t('registro')}}</button>
     </div>
 
     <b-navbar-nav v-if="logeado" class="nav align-items-center ml-auto">
@@ -32,9 +37,9 @@
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
             <p class="user-name font-weight-bolder mb-0">
-              John Doe
+              {{datos}}
             </p>
-            <span class="user-status">Admin</span>
+            <span class="user-status"></span>
           </div>
           <b-avatar
             size="40"
@@ -46,25 +51,42 @@
           />
         </template>
 
-        <b-dropdown-item link-class="d-flex align-items-center">
+        <b-dropdown-item link-class="d-flex align-items-center" @click="$router.push('perfil')">
           <feather-icon
             size="16"
             icon="UserIcon"
             class="mr-50"
           />
-          <span>Profile</span>
+          <span>Perfil</span>
+        </b-dropdown-item>
+        <b-dropdown-item link-class="d-flex align-items-center" @click="$router.push('pagar')">
+          <feather-icon
+            size="16"
+            icon="CreditCardIcon"
+            class="mr-50"
+          />
+          <span>Realizar Pagos</span>
         </b-dropdown-item>
 
-        <b-dropdown-item link-class="d-flex align-items-center">
+        <b-dropdown-item link-class="d-flex align-items-center" @click="$router.push('productos')">
+          <feather-icon
+            size="16"
+            icon="ShoppingCartIcon"
+            class="mr-50"
+          />
+          <span>Canjear</span>
+        </b-dropdown-item>
+
+        <!-- <b-dropdown-item link-class="d-flex align-items-center">
           <feather-icon
             size="16"
             icon="MailIcon"
             class="mr-50"
           />
           <span>Inbox</span>
-        </b-dropdown-item>
+        </b-dropdown-item> -->
 
-        <b-dropdown-item link-class="d-flex align-items-center">
+        <!-- <b-dropdown-item link-class="d-flex align-items-center">
           <feather-icon
             size="16"
             icon="CheckSquareIcon"
@@ -80,17 +102,17 @@
             class="mr-50"
           />
           <span>Chat</span>
-        </b-dropdown-item>
+        </b-dropdown-item> -->
 
         <b-dropdown-divider />
 
-        <b-dropdown-item link-class="d-flex align-items-center">
+        <b-dropdown-item link-class="d-flex align-items-center" @click="cerrarSesion()">
           <feather-icon
             size="16"
             icon="LogOutIcon"
             class="mr-50"
           />
-          <span>Logout</span>
+          <span>Cerrar sesion</span>
         </b-dropdown-item>
       </b-nav-item-dropdown>
     </b-navbar-nav>
@@ -101,9 +123,11 @@
 import {
   BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
 } from 'bootstrap-vue'
-import { isUserLoggedIn } from '@/auth/utils';
+import { isUserLoggedIn, getUserData } from '@/auth/utils';
+import i18n from '@/plugins/i18n'
 
 export default {
+  name: 'LanguageComponent',
   components: {
     BLink,
     BNavbarNav,
@@ -115,6 +139,11 @@ export default {
   data() {
     return {
       logeado: isUserLoggedIn(),
+      datos: getUserData(),
+      languages: [
+        { locale: 'es', title: 'Español' },
+        { locale: 'en', title: 'Inglés' },
+      ],
     }
   },
   props: {
@@ -123,8 +152,17 @@ export default {
       default: () => {},
     },
   },
-  beforeMount() {
-    console.log('ok');
+  updated() {
+    this.logeado = isUserLoggedIn();
+  },
+  methods: {
+    cerrarSesion() {
+      localStorage.removeItem('token');
+      window.location.href = '/';
+    },
+    changeLanguage(locale) {
+      i18n.locale = locale
+    },
   },
 }
 </script>

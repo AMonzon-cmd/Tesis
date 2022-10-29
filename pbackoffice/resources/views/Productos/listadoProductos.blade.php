@@ -56,7 +56,7 @@
         </div>
       </div>
       <br>
-      <a class="ml-3 btn btn-success" href="{{route('vistaAltaProducto')}}">Nuevo Producto</a>
+      <a class="ml-3 btn btn-success" href="{{ruta('producto')}}">Nuevo Producto</a>
       <div class="panel-body table-responsive">
         <table id="productosTable" class="table table-bordered table-hover">
           <thead>
@@ -103,7 +103,7 @@
                 </td>
         
             <td class="text-center pt-3">
-              <a href="{{route('vistaEditarProducto', ['id' => $producto->id])}}"><i class="fas fa-user-edit fa-lg"></i></a>
+              <a href="{{ruta('producto', $producto->id)}}"><i class="fas fa-user-edit fa-lg"></i></a>
               @if ($producto->deleted_at == null)
                 <a href="javascript:;" onclick="cambiarEstado({{$producto->id}}, 'alta')" class="text-danger ml-2 mt-1"><i class="fas fa-ban fa-lg"></i></a>
               @else
@@ -192,7 +192,7 @@
           }).then((result) => {
               if (result.isConfirmed) {
                 $.ajax({
-              url: '{!! route('alternarEstadoProducto') !!}',
+              url: '{!! ruta('cambiarEstadoProducto') !!}',
               type:'post',
               dataType: "json",
               data:{

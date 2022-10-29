@@ -1,10 +1,20 @@
 <template>
   <div>
-    <div style="padding:0; margin-top: -2rem; position: relative">
+      <b-carousel
+        id="carousel-interval"
+        controls
+        indicators
+        :interval="4200"
+        style="padding:0; margin-top: -5.5rem;"
+        v-if="publicidades.length != 0"
+      >
+        <b-carousel-slide v-for="publicidad in publicidades" v-bind:key="publicidad.id" :img-src="publicidad.img" />
+      </b-carousel>
+    <div style="padding:0; position: relative">
       <img class="col-12 img-fluid p-0" src="https://www.e-sistarbanc.com.uy/imagenes/img_presentacion/portada_slider-02.jpg" alt="">
       <div style="position:absolute; top:0; bottom:0; left:0; right:0;">
         <br/>
-        <h1 class="d-none d-md-block col-md-12 text-center text-white mt-md-4">BIENVENIDO A PAYDAY</h1>
+        <h1 class="d-none d-md-block col-md-12 text-center text-white mt-md-4">{{ $t('titulo') }}</h1>
         <h2 class="d-none d-md-block col-md-12 text-center text-white">Brindandos soluciones a tus pagos</h2>
         <div class="row justify-content-center" style="position:absolute; bottom:10rem; left:0; right:0;">
           <h4 class="col-12 text-white text-center">¿Que te ofrecemos?</h4>
@@ -51,11 +61,36 @@
 </template>
 
 <script>
-// import { BCard, BCardText, BLink } from 'bootstrap-vue'
+import { BCarousel, BCarouselSlide } from 'bootstrap-vue'
+import { getRequestOptionGet } from '@/auth/utils';
 
 export default {
   components: {
-
+    BCarousel,
+    BCarouselSlide,
+  },
+  data() {
+    return {
+      publicidades: [],
+    }
+  },
+  beforeCreate() {
+    // invocar los métodos
+    fetch(`${this.$baseUrlApi}/service/publicity`, getRequestOptionGet)
+      .then(async response => {
+        const data = await response.json();
+        // check for error response
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        }
+        this.publicidades = data.publicidades;
+        return true;
+      })
+      .catch(error => {
+        this.errorMessage = error;
+        console.error('There was an error!', error);
+      });
   },
 }
 

@@ -104,8 +104,9 @@ function VerificarDatos(email, fechaNacimiento, nombre, apellido, documento, rol
 
 function GenerarEmpleado(email, nombre, apellido, documento, fechaNacimiento, rol){
     $("#mantaLoading").modal('show');
+    var urii = $("#uriiAlta").val();
     $.ajax({
-        url:'AltaEmpleadoAjax',
+        url: urii,
         data:{'email': email, 'nombre': nombre, 'apellido': apellido, 'documento': documento, 'fechaNacimiento': fechaNacimiento, 'rol':rol},
         type:'post',
         dataType: "json",
